@@ -121,15 +121,6 @@ public class SignUp extends Application {
                 if(validateName1Input() == true && validateName2Input() == true && validatePasswordInput() == true && validateConfirmPasswordInput() == true && validatePhoneNumberInput() == true 
                         && validateEmailAddressInput() == true && validateGenderInput() == true && validateAddressInput() == true && validatePostalCodeInput() == true && validateCityInput() == true 
                         && validateProvinceTerritoryInput() == true && validateBirthDate() == true){
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thank You!");
                     alert.setHeaderText(null);
