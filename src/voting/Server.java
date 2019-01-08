@@ -15,13 +15,12 @@ import java.net.*;
 
 public class Server {
 
-    // ServerSocket serverSocket;
     static Socket socket;
     static DataInputStream dis;
-    // static DataOutputStream dos;
 
     public static void main (String[] args) {
         String msgin = "";
+        int userNum = 0;
         try (ServerSocket serverSocket = new ServerSocket(8888)) {
             while (!msgin.equals("exit")) {
                 System.out.println("Waiting for client...");
@@ -29,15 +28,18 @@ public class Server {
                 System.out.println("Client accepted: " + socket);
 
                 dis = new DataInputStream(socket.getInputStream());
-                // dos = new DataOutputStream(socket.getOutputStream());
-
-                // while (!msgin.equals("exit")) {
-                    // msgin = dis.readUTF();
-                    // System.out.println(msgin);
-                // }
                 msgin = dis.readUTF();
+                String[] inputData = msgin.split(" ");
+
+                PrintWriter writer = new PrintWriter("User" + userNum + ".txt", "UTF-8");
+                for (String i : inputData) {
+                    writer.println(i);
+                }
+                writer.close();
+
                 System.out.println(msgin);
                 socket.close();
+                userNum++;
             }
         } catch(IOException e) {
             e.printStackTrace();
