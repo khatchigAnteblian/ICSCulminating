@@ -1,4 +1,4 @@
-[] storing info in txt
+[x] storing info in txt
 [] adding networking stuff to signup login and voting
 [] searching through files to find user database
 [] add a user class and a voter class that inherits from user class
