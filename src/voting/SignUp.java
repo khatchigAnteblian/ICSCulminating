@@ -1,4 +1,4 @@
-// package voting;
+package voting;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -146,7 +146,7 @@ public class SignUp extends Application {
 
                 for (String i : userInput) {
                     if (!i.isEmpty()) {
-                        message += hash(i);
+                        message += hash(i) + " ";
                     } else {
                         emptyInput = true;
                     }
@@ -222,7 +222,7 @@ public class SignUp extends Application {
         Pattern p = Pattern.compile("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$");
         Matcher m = p.matcher(phoneField.getText());
         if(m.find() && m.group().equals(phoneField.getText())){
-            message += phoneField.getText() + " ";
+            message += phoneField.getText();
             return message;
         }
         else{
@@ -237,7 +237,7 @@ public class SignUp extends Application {
         Pattern p = Pattern.compile("[a-zA-Z0-9][a-zA-Z0-9. ]*@[a-zA-Z0-9]+([.][a-zA-Z]+)+"); 
         Matcher m = p.matcher(emailField.getText());
         if(m.find() && m.group().equals(emailField.getText())){
-            message += emailField.getText() + " ";
+            message += emailField.getText();
             return message;
         }
         else{
@@ -252,7 +252,7 @@ public class SignUp extends Application {
         Pattern p = Pattern.compile("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,40})"); 
         Matcher m = p.matcher(password.getText());
         if(m.find() && m.group().equals(password.getText())){
-            message += password.getText() + " ";
+            message += password.getText();
             return message;
         }
         else{
@@ -265,7 +265,7 @@ public class SignUp extends Application {
     private String validateConfirmPasswordInput(){
         String message = "";
         if(confirmPassword.getText().equals(password.getText())){
-            message += confirmPassword.getText() + " ";
+            message += confirmPassword.getText();
             return message;
         }
         else{
@@ -283,7 +283,7 @@ public class SignUp extends Application {
             return message;
         }
         else
-            message += nameField1.getText() + " ";
+            message += nameField1.getText();
             return message;
     }
        
@@ -295,7 +295,7 @@ public class SignUp extends Application {
             return message;
         }
         else
-            message += nameField2.getText() + " ";
+            message += nameField2.getText();
             return message;
     }
     
@@ -307,7 +307,7 @@ public class SignUp extends Application {
             return message;
         }
         else
-            message += gender.getValue() + " ";
+            message += gender.getValue();
             return message;
     }
     
@@ -319,7 +319,7 @@ public class SignUp extends Application {
             return message;
         }
         else
-            message += addressField.getText() + " ";
+            message += addressField.getText();
             return message;
     }
     
@@ -331,7 +331,7 @@ public class SignUp extends Application {
             return message;
         }
         else
-            message += postalcodeField.getText() + " ";
+            message += postalcodeField.getText();
             return message;
     }
     
@@ -343,7 +343,7 @@ public class SignUp extends Application {
             return message;
         }
         else
-            message += cityField.getText() + " ";
+            message += cityField.getText();
             return message;
     }
     
@@ -355,7 +355,7 @@ public class SignUp extends Application {
             return message;
         }
         else
-            message += provinceTerritory.getValue() + " ";
+            message += provinceTerritory.getValue();
             return message;
     }
     
@@ -386,7 +386,7 @@ public class SignUp extends Application {
                             return message;
                         }
                         else{
-                            message += day + "/" + month + "/" + m.group(3) + " ";
+                            message += day + "/" + month + "/" + m.group(3);
                             return message;
                         }
                     }
@@ -397,13 +397,13 @@ public class SignUp extends Application {
                             return message;
                         }
                         else{
-                            message += day + "/" + month + "/" + m.group(3) + " ";
+                            message += day + "/" + month + "/" + m.group(3);
                             return message;
                         }
                     }
                 }
                 else{                
-                    message += day + "/" + month + "/" + m.group(3) + " ";
+                    message += day + "/" + month + "/" + m.group(3);
                     return message;
                 }
             }
