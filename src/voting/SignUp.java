@@ -1,4 +1,4 @@
-package voting;
+// package voting;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -15,12 +15,17 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.*;
+import java.io.*;
+import java.net.Socket;
 
 /**
  *
  * @author Vedant Shah & Khatchig Anteblian
  */
 public class SignUp extends Application {
+    static int port = 8888;
+    static String host = "localhost"; // Change later to ip address
+    static DataOutputStream dos;
     TextField phoneField, addressField, password, confirmPassword, emailField, cityField, nameField1, nameField2, postalcodeField, birthdate;
     ChoiceBox<String> gender, provinceTerritory;
     GridPane gridPane = new GridPane();
@@ -118,9 +123,18 @@ public class SignUp extends Application {
             
             @Override
             public void handle(ActionEvent event) {
-                if(validateName1Input() == true && validateName2Input() == true && validatePasswordInput() == true && validateConfirmPasswordInput() == true && validatePhoneNumberInput() == true 
-                        && validateEmailAddressInput() == true && validateGenderInput() == true && validateAddressInput() == true && validatePostalCodeInput() == true && validateCityInput() == true 
-                        && validateProvinceTerritoryInput() == true && validateBirthDate() == true){
+                String message = "It works!";
+
+                if(validateName1Input() && validateName2Input() && validatePasswordInput() && validateConfirmPasswordInput() && validatePhoneNumberInput() 
+                        && validateEmailAddressInput() && validateGenderInput() && validateAddressInput() && validatePostalCodeInput() && validateCityInput() 
+                        && validateProvinceTerritoryInput() && validateBirthDate()){
+                    try (Socket socket = connectToServer(port, host)) {
+                        dos = new DataOutputStream(socket.getOutputStream());
+                        dos.writeUTF(message);
+                        dos.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thank You!");
                     alert.setHeaderText(null);
@@ -150,6 +164,17 @@ public class SignUp extends Application {
         alert.setContentText(message);
         alert.initOwner(owner);
         alert.show();
+    }
+
+    public static Socket connectToServer(int port, String host) {
+        // Search the IP address and port number of the host and connect to it
+        Socket socket;
+        try {
+            socket = new Socket(host, port);
+        } catch (IOException e) {
+            socket = null;
+        }
+        return socket;
     }
 
     private boolean validatePhoneNumberInput(){
