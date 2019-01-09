@@ -30,6 +30,7 @@ import java.math.BigInteger;
 public class SignUp extends Application {
     static int port = 8888;
     static String host = "localhost"; // Change later to ip address
+    static DataInputStream dis;
     static DataOutputStream dos;
     TextField phoneField, addressField, password, confirmPassword, emailField, cityField, nameField1, nameField2, postalcodeField, birthdate;
     ChoiceBox<String> gender, provinceTerritory;
@@ -153,23 +154,39 @@ public class SignUp extends Application {
                 }
 
                 if (!emptyInput) {
+                    String serverFeedback = "";
                     try (Socket socket = connectToServer(port, host)) {
+                        dis = new DataInputStream(socket.getInputStream());
                         dos = new DataOutputStream(socket.getOutputStream());
                         dos.writeUTF(message);
                         dos.flush();
+                        serverFeedback = dis.readUTF();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thank You!");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Thank you for signing up. You will now be directed to the voting page.");
-                    Optional <ButtonType> action = alert.showAndWait();
-                    Stage votingStage = new Stage();
-                    VotingPage voting = new VotingPage();
-                    voting.start(votingStage);
-                    votingStage.show();
-                    signUpStage.close();
+                    if (serverFeedback.equals("AOK")) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Thank You!");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Thank you for signing up. You will now be directed to the voting page.");
+                        Optional <ButtonType> action = alert.showAndWait();
+                        Stage votingStage = new Stage();
+                        VotingPage voting = new VotingPage();
+                        voting.start(votingStage);
+                        votingStage.show();
+                        signUpStage.close();
+                    } else if (serverFeedback.equals("FAE")) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Account Already Exists!");
+                        alert.setHeaderText(null);
+                        alert.setContentText("This account has already been created. Click ok to log in now.");
+                        Optional <ButtonType> action = alert.showAndWait();
+                        Stage loginStage = new Stage();
+                        Login loginPage = new Login();
+                        loginPage.start(loginStage);
+                        loginStage.show();
+                        signUpStage.close();
+                    }
                 }
             }
         });
