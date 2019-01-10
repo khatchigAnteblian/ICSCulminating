@@ -48,13 +48,13 @@ public class SignUp extends Application {
         
         Button signIn = new Button("Sign Up");
         
-        Label nameLabel1 = new Label("First Name: ");
+        Label nameLabel1 = new Label("Full Name: ");
         gridPane.add(nameLabel1, 0,1);
         
         nameField1 = new TextField();
         gridPane.add(nameField1, 1, 1);
         
-        Label nameLabel2 = new Label("Surname: ");
+        Label nameLabel2 = new Label("Username: ");
         gridPane.add(nameLabel2, 0, 3);
         
         nameField2 = new TextField();
@@ -132,8 +132,8 @@ public class SignUp extends Application {
                 String message = "";
                 boolean emptyInput = false;
                 String[] userInput = new String[12];
-                userInput[0] = validateName1Input();
-                userInput[1] = validateName2Input();
+                userInput[0] = validateName2Input();
+                userInput[1] = validateName1Input();
                 userInput[2] = validatePasswordInput();
                 userInput[3] = validateConfirmPasswordInput();
                 userInput[4] = validatePhoneNumberInput();
@@ -161,10 +161,11 @@ public class SignUp extends Application {
                         dos.writeUTF(message);
                         dos.flush();
                         serverFeedback = dis.readUTF();
+                        System.out.println(serverFeedback);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (serverFeedback.equals("AOK")) {
+                    if (serverFeedback.equals("0")) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Thank You!");
                         alert.setHeaderText(null);
@@ -175,16 +176,42 @@ public class SignUp extends Application {
                         voting.start(votingStage);
                         votingStage.show();
                         signUpStage.close();
-                    } else if (serverFeedback.equals("FAE")) {
+                    } else {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Account Already Exists!");
                         alert.setHeaderText(null);
-                        alert.setContentText("This account has already been created. Click ok to log in now.");
-                        Optional <ButtonType> action = alert.showAndWait();
-                        Stage loginStage = new Stage();
-                        Login loginPage = new Login();
-                        loginPage.start(loginStage);
-                        loginStage.show();
+                        if (serverFeedback.equals("-1")) {
+                            // showAlert(Alert.AlertType.ERROR, 
+                                    // gridPane.getScene().getWindow(), 
+                                    // "Account Already Exists!", 
+                                    // "This account has already been created. Click ok to log in now.");
+                            alert.setTitle("Account Already Exists!");
+                            alert.setContentText("This account has already been created. Click ok to log in now.");
+                            Optional <ButtonType> action = alert.showAndWait();
+                            Stage loginStage = new Stage();
+                            Login loginPage = new Login();
+                            loginPage.start(loginStage);
+                            loginStage.show();
+                        } else if (serverFeedback.equals("1")) {
+                            // showAlert(Alert.AlertType.ERROR, 
+                                    // gridPane.getScene().getWindow(), 
+                                    // "Username Already Taken!", 
+                                    // "The given username is already taken. Please choose a new one.");
+                            alert.setTitle("Username Already Taken!");
+                            alert.setContentText("The given username is already taken. Please choose a new one.");
+                            Optional <ButtonType> action = alert.showAndWait();
+                        } else if (serverFeedback.equals("2")) {
+                            // showAlert(Alert.AlertType.ERROR, 
+                                    // gridPane.getScene().getWindow(), 
+                                    // "Account Exists Under A Different Username!", 
+                                    // "This account information already exists under a different username. A person Can only sign up to vote once.");
+                            alert.setTitle("Account Exists Under A Different Username!");
+                            alert.setContentText("This account information already exists under a different username. A person Can only sign up to vote once.");
+                            Optional <ButtonType> action = alert.showAndWait();
+                            Stage loginStage = new Stage();
+                            Login loginPage = new Login();
+                            loginPage.start(loginStage);
+                            loginStage.show();
+                        }
                         signUpStage.close();
                     }
                 }
@@ -296,7 +323,7 @@ public class SignUp extends Application {
         String message = "";
         if(nameField1.getText().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), 
-            "Form Error!", "Please enter your first name.");
+            "Form Error!", "Please enter your full name.");
             return message;
         }
         else
@@ -308,7 +335,7 @@ public class SignUp extends Application {
         String message = "";
         if(nameField2.getText().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), 
-            "Form Error!", "Please enter your surname.");
+            "Form Error!", "Please create a username.");
             return message;
         }
         else

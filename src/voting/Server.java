@@ -7,6 +7,9 @@ package voting;
 
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -35,19 +38,21 @@ public class Server {
 
                 String path = "../../Database/";
                 File f = new File(path + inputData[0]);
-                if (!f.exists()) {
+                int inputValidation = validateUserInput(f);
+                if (inputValidation == 0) {
                     try {
                         writeToDbase(inputData, f);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
-                    dos.writeUTF("AOK");
+                    dos.writeUTF("0");
                     dos.flush();
-                    System.out.println(msgin);
+                    System.out.println("INPUT AOK!");
                 } else {
-                    dos.writeUTF("FAE");
+                    dos.writeUTF("" + inputValidation);
                     dos.flush();
+                    System.out.println("INPUT NOT OK!");
                 }
                 socket.close();
             }
@@ -64,6 +69,49 @@ public class Server {
             writer.flush();
         }
         writer.close();
+    }
+    
+    public static int validateUserInput(File f) {
+        // Return val 0: User input is new and unique.
+        // Return val 1: Username already taken.
+        // Return val -1: Exact match with all input. Account already exists.
+        // Return val 2: User info exists under a different username.
+        if (f.exists()) {
+            if (accountExists(f)) {
+                return -1;
+            }
+            return 1;
+        } else {
+            if (accountExists(f)) {
+                return 2;
+            }
+            return 0;
+        }
+    }
+    
+    public static boolean accountExists(File f) {
+        String path = "../../Database/";
+        File directory = new File(path);
+        String file = readFile(f);
+        String[] dbase_files = directory.list();
+        for (String i : dbase_files) {
+           if (readFile(new File(path + i)).equals(file)) {
+               return true;
+           } 
+        }
+        return false;
+    }
+
+    public static String readFile(File f) {
+        String fileContent = "";
+        try {
+            fileContent = new String(Files.readAllBytes(Paths.get(f.getPath())), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(fileContent);
+        System.out.println("----------------");
+        return fileContent;
     }
 
 }
