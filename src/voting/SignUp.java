@@ -161,7 +161,6 @@ public class SignUp extends Application {
                         dos.writeUTF(message);
                         dos.flush();
                         serverFeedback = dis.readUTF();
-                        System.out.println(serverFeedback);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -169,21 +168,17 @@ public class SignUp extends Application {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Thank You!");
                         alert.setHeaderText(null);
-                        alert.setContentText("Thank you for signing up. You will now be directed to the voting page.");
+                        alert.setContentText("Thank you for signing up. You may now login.");
                         Optional <ButtonType> action = alert.showAndWait();
-                        Stage votingStage = new Stage();
-                        VotingPage voting = new VotingPage();
-                        voting.start(votingStage);
-                        votingStage.show();
+                        Stage loginStage = new Stage();
+                        Login loginPage = new Login();
+                        loginPage.start(loginStage);
+                        loginStage.show();
                         signUpStage.close();
                     } else {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setHeaderText(null);
                         if (serverFeedback.equals("-1")) {
-                            // showAlert(Alert.AlertType.ERROR, 
-                                    // gridPane.getScene().getWindow(), 
-                                    // "Account Already Exists!", 
-                                    // "This account has already been created. Click ok to log in now.");
                             alert.setTitle("Account Already Exists!");
                             alert.setContentText("This account has already been created. Click ok to log in now.");
                             Optional <ButtonType> action = alert.showAndWait();
@@ -191,19 +186,12 @@ public class SignUp extends Application {
                             Login loginPage = new Login();
                             loginPage.start(loginStage);
                             loginStage.show();
+                            signUpStage.close();
                         } else if (serverFeedback.equals("1")) {
-                            // showAlert(Alert.AlertType.ERROR, 
-                                    // gridPane.getScene().getWindow(), 
-                                    // "Username Already Taken!", 
-                                    // "The given username is already taken. Please choose a new one.");
                             alert.setTitle("Username Already Taken!");
                             alert.setContentText("The given username is already taken. Please choose a new one.");
                             Optional <ButtonType> action = alert.showAndWait();
                         } else if (serverFeedback.equals("2")) {
-                            // showAlert(Alert.AlertType.ERROR, 
-                                    // gridPane.getScene().getWindow(), 
-                                    // "Account Exists Under A Different Username!", 
-                                    // "This account information already exists under a different username. A person Can only sign up to vote once.");
                             alert.setTitle("Account Exists Under A Different Username!");
                             alert.setContentText("This account information already exists under a different username. A person Can only sign up to vote once.");
                             Optional <ButtonType> action = alert.showAndWait();
@@ -211,8 +199,8 @@ public class SignUp extends Application {
                             Login loginPage = new Login();
                             loginPage.start(loginStage);
                             loginStage.show();
+                            signUpStage.close();
                         }
-                        signUpStage.close();
                     }
                 }
             }
