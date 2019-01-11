@@ -1,5 +1,12 @@
 [x] storing info in txt
 [] adding networking stuff to signup login and voting
-[] searching through files to find user database
-[] add a user class and a voter class that inherits from user class
+[x] searching through files to find user database
+[x] add a user class and a voter class that inherits from user class
 
+
+Queries:
+
+1. Are we taking too much info from users?
+We aren't using most of the user info and we
+can't really make use of it as it is hashed so 
+we can't see it.
