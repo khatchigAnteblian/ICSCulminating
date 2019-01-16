@@ -25,8 +25,9 @@ public class Server {
 
     public static void main (String[] args) {
         String msgin = "";
+        File currentUser = null;
         try (ServerSocket serverSocket = new ServerSocket(8888)) {
-            while (!msgin.equals("exit")) {
+            while (true) {
                 System.out.println("Waiting for client...");
                 socket = serverSocket.accept();
                 System.out.println("Client accepted: " + socket);
@@ -36,10 +37,10 @@ public class Server {
 
                 msgin = dis.readUTF();
                 String[] inputData = msgin.split(" ");
-                File f = new File(dbasePath + inputData[0]);
 
                 if (inputData.length == 2) {
                     if (validateLogin(inputData)) {
+                        currentUser = new File(dbasePath + inputData[0]);
                         try {
                             dos.writeUTF("0");
                             dos.flush();
@@ -56,11 +57,17 @@ public class Server {
                             e.printStackTrace();
                         }
                     }
+                } else if (inputData.length == 1) {
+                    try {
+                        writeToDbase(inputData, currentUser, 0);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     int inputValidation = validateUserInput(inputData);
                     if (inputValidation == 0) {
                         try {
-                            writeToDbase(inputData, f);
+                            writeToDbase(inputData, currentUser, 1);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -81,9 +88,9 @@ public class Server {
         }
     }
 
-    public static void writeToDbase(String[] s, File f) throws IOException {
+    public static void writeToDbase(String[] s, File f, int index) throws IOException {
         FileWriter writer = new FileWriter(f, true);
-        for (int i=1; i<s.length; i++) {
+        for (int i=index; i<s.length; i++) {
             writer.write(s[i]);
             writer.write(System.getProperty("line.separator"));
             writer.flush();
