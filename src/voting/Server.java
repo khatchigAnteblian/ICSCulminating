@@ -36,23 +36,43 @@ public class Server {
 
                 msgin = dis.readUTF();
                 String[] inputData = msgin.split(" ");
-
                 File f = new File(dbasePath + inputData[0]);
-                int inputValidation = validateUserInput(inputData);
-                if (inputValidation == 0) {
-                    try {
-                        writeToDbase(inputData, f);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
 
-                    dos.writeUTF("0");
-                    dos.flush();
-                    System.out.println("INPUT AOK!");
+                if (inputData.length == 2) {
+                    if (validateLogin(inputData)) {
+                        try {
+                            dos.writeUTF("0");
+                            dos.flush();
+                            System.out.println("LOGIN AOK!");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            dos.writeUTF("1");
+                            dos.flush();
+                            System.out.println("LOGIN NOT OK!");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } else {
-                    dos.writeUTF("" + inputValidation);
-                    dos.flush();
-                    System.out.println("INPUT NOT OK!");
+                    int inputValidation = validateUserInput(inputData);
+                    if (inputValidation == 0) {
+                        try {
+                            writeToDbase(inputData, f);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+    
+                        dos.writeUTF("0");
+                        dos.flush();
+                        System.out.println("INPUT AOK!");
+                    } else {
+                        dos.writeUTF("" + inputValidation);
+                        dos.flush();
+                        System.out.println("INPUT NOT OK!");
+                    }
                 }
                 socket.close();
             }
@@ -69,6 +89,27 @@ public class Server {
             writer.flush();
         }
         writer.close();
+    }
+
+    public static boolean validateLogin(String[] input) {
+        String filePath = dbasePath + input[0];
+        File file = new File(filePath);
+        boolean result = false;
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+                // Discard first line of file.
+                br.readLine();
+
+                if (br.readLine().trim().equals(input[1])) {
+                    result = true;
+                } else {
+                    result = false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
     
     public static int validateUserInput(String[] input) {
