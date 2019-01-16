@@ -65,6 +65,7 @@ public class Server {
                     }
                 } else {
                     int inputValidation = validateUserInput(inputData);
+                    currentUser = new File(dbasePath + inputData[0]);
                     if (inputValidation == 0) {
                         try {
                             writeToDbase(inputData, currentUser, 1);
